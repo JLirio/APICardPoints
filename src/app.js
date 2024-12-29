@@ -14,6 +14,4 @@ app.use(cors());
 app.use("/usuarios", userRoutes);
 app.use("/admin", adminRoutes);
 
-//console.log(process.env.DATABASE_URL)
-
 export default app;
