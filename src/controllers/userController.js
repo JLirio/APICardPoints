@@ -94,6 +94,7 @@ export const uploadImage = async (req, res) => {
         // Excluir o arquivo local após o upload
         fs.unlinkSync(file.path);
 
+        console.log('> drive response:',driveResponse)
         res.status(200).json({ imageUrl: driveResponse.webViewLink });
     } catch (error) {
         console.error('Erro no upload da imagem:', error);
