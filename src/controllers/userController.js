@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';  // Pacote para hashear senhas
 import { google } from "googleapis";
 import jwt from 'jsonwebtoken'; // Pacote para geração de tokens
 import multer from "multer";
-import fs from 'fs'
+import fs, { copyFileSync } from 'fs'
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -29,7 +29,6 @@ export const upload = multer({
     },
 });
 
-const keyPath = path.join(__dirname, 'credentials.json');  // Caminho do arquivo JSON
 const auth = new google.auth.GoogleAuth({
     credentials: {
         type: "service_account",
@@ -94,7 +93,7 @@ export const uploadImage = async (req, res) => {
         // Excluir o arquivo local após o upload
         fs.unlinkSync(file.path);
 
-        console.log('> drive response:',driveResponse)
+        console.log('>>> * Arquivo Enviado:', file)
         res.status(200).json({ imageUrl: driveResponse.webViewLink });
     } catch (error) {
         console.error('Erro no upload da imagem:', error);
