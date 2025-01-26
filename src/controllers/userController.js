@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';  // Pacote para hashear senhas
 import { google } from "googleapis";
 import jwt from 'jsonwebtoken'; // Pacote para geração de tokens
 import multer from "multer";
-import fs, { copyFileSync } from 'fs'
+import fs from 'fs'
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -29,29 +29,17 @@ export const upload = multer({
     },
 });
 
+const keyPath = path.join(__dirname, '../../credentials.json'); // Caminho do arquivo JSON
 const auth = new google.auth.GoogleAuth({
-    credentials: {
-        type: "service_account",
-        project_id: process.env.GOOGLE_PROJECT_ID,
-        private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-        private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-        client_email: process.env.GOOGLE_CLIENT_EMAIL,
-        client_id: process.env.GOOGLE_CLIENT_ID,
-        auth_uri: process.env.GOOGLE_AUTH_URI,
-        token_uri: process.env.GOOGLE_TOKEN_URI,
-        auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_CERT_URL,
-        client_x509_cert_url: process.env.GOOGLE_CLIENT_CERT_URL,
-    },
+    keyFile: keyPath,
     scopes: ['https://www.googleapis.com/auth/drive.file'],  // Permissões necessárias
 });
 
 const drive = google.drive({ version: 'v3', auth });
 
-
-
 // Função para fazer upload no Google Drive
 export const uploadToGoogleDrive = async (filePath, fileName, folderId) => {
-
+    
     const fileMetadata = {
         name: fileName,
         parents: [folderId],  // ID da pasta do Google Drive
@@ -93,7 +81,6 @@ export const uploadImage = async (req, res) => {
         // Excluir o arquivo local após o upload
         fs.unlinkSync(file.path);
 
-        console.log('>>> * Arquivo Enviado:', file)
         res.status(200).json({ imageUrl: driveResponse.webViewLink });
     } catch (error) {
         console.error('Erro no upload da imagem:', error);
