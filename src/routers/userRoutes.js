@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { createUser, getUsers, getUserByEmail, deleteUser, editUser, getUserById, loginUser, getUserInfo, uploadImage } from "../controllers/userController.js";
+import { createUser, getUsers, getUserByEmail, deleteUser, editUser, updateSales, getUserById, loginUser, getUserInfo, uploadImage } from "../controllers/userController.js";
 import { upload } from "../controllers/userController.js";
 const router = Router();
 
@@ -9,6 +9,7 @@ router.get("/login/:email?", getUserByEmail);
 router.get("/user/:id?", getUserById);
 router.get("/", getUsers);
 router.put("/:id?", editUser);
+router.put("/:id?", updateSales);
 router.delete("/:id", deleteUser);
 router.post("/img-user", upload.single('image'), uploadImage)
 
