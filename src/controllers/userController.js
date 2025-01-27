@@ -29,16 +29,13 @@ export const upload = multer({
     },
 });
 
-
-const keyPath = path.join(__dirname, 'credentials.json');  // Caminho do arquivo JSON
+const keyPath = path.join(__dirname, '../../credentials.json'); // Caminho do arquivo JSON
 const auth = new google.auth.GoogleAuth({
     keyFile: keyPath,
     scopes: ['https://www.googleapis.com/auth/drive.file'],  // Permissões necessárias
 });
 
 const drive = google.drive({ version: 'v3', auth });
-
-
 
 // Função para fazer upload no Google Drive
 export const uploadToGoogleDrive = async (filePath, fileName, folderId) => {
