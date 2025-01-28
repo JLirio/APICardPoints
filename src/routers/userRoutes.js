@@ -9,7 +9,7 @@ router.get("/login/:email?", getUserByEmail);
 router.get("/user/:id?", getUserById);
 router.get("/", getUsers);
 router.put("/:id?", editUser);
-router.put("/:id?", updateSales);
+router.put("/update/:id?", updateSales);
 router.delete("/:id", deleteUser);
 router.post("/img-user", upload.single('image'), uploadImage)
 

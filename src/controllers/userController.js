@@ -39,7 +39,7 @@ const drive = google.drive({ version: 'v3', auth });
 
 // Função para fazer upload no Google Drive
 export const uploadToGoogleDrive = async (filePath, fileName, folderId) => {
-    
+
     const fileMetadata = {
         name: fileName,
         parents: [folderId],  // ID da pasta do Google Drive
@@ -268,39 +268,43 @@ export const editUser = async (req, res) => {
 };
 
 export const updateSales = async (req, res) => {
+
     try {
-      const { vendasA, vendasB } = req.body; // Os valores a serem adicionados
-      const userId = req.params.id; // O ID do usuário a ser atualizado
-  
-      // Atualiza as vendas adicionando os valores fornecidos
-      const updatedUser = await prisma.user.update({
-        where: {
-          id: userId,
-        },
-        data: {
-          vendasA: {
-            increment: vendasA || 0, // Incrementa vendasA ou usa 0 se não for enviado
-          },
-          vendasB: {
-            increment: vendasB || 0, // Incrementa vendasB ou usa 0 se não for enviado
-          },
-          vendasTotais: {
-            increment: (vendasA || 0) + (vendasB || 0), // Incrementa vendasTotais com a soma dos valores
-          },
-        },
-      });
-  
-      res.status(200).json({
-        message: 'Vendas atualizadas com sucesso!',
-        user: updatedUser,
-      });
+
+        const vendasA = parseFloat(req.body.vendasA);
+        const vendasB = parseFloat(req.body.vendasB); // Os valores a serem adicionados
+        const userId = req.params.id; // O ID do usuário a ser atualizado
+
+
+        // Atualiza as vendas adicionando os valores fornecidos
+        const updatedUser = await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                vendasA: {
+                    increment: vendasA || 0, // Incrementa vendasA ou usa 0 se não for enviado
+                },
+                vendasB: {
+                    increment: vendasB || 0, // Incrementa vendasB ou usa 0 se não for enviado
+                },
+                vendasTotais: {
+                    increment: (vendasA || 0) + (vendasB || 0), // Incrementa vendasTotais com a soma dos valores
+                },
+            },
+        });
+
+        res.status(200).json({
+            message: 'Vendas atualizadas com sucesso!',
+            user: updatedUser,
+        });
     } catch (error) {
-      console.error('Erro ao atualizar vendas:', error);
-      res.status(500).json({
-        message: 'Erro ao atualizar vendas',
-        error: error.message,
-      });
+        console.error('Erro ao atualizar vendas:', error);
+        res.status(500).json({
+            message: 'Erro ao atualizar vendas',
+            error: error.message,
+        });
     }
-  };
+};
 
 // Outras funções: updateUser, deleteUser...
