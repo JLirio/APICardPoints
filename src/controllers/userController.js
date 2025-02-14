@@ -248,22 +248,44 @@ export const deleteUser = async (req, res) => {
 };
 
 export const editUser = async (req, res) => {
-    await prisma.user.update({
-        where: {
-            id: req.params.id
-        },
-        data: {
-            name: req.body.name,
-            email: req.body.email,
-            imgUser: req.body.imgUser,
-            group: req.body.group,
-            vendasA: req.body.vendasA,
-            vendasB: req.body.vendasB,
-            vendasTotais: req.body.vendasB + req.body.vendasA,
-            cargo: req.body.cargo
-        }
-    })
+    if (req.body.senha) {
+        const hashedPassword = await bcrypt.hash(req.body.senha, 10);
 
+        await prisma.user.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                name: req.body.name,
+                email: req.body.email,
+                imgUser: req.body.imgUser,
+                group: req.body.group,
+                vendasA: req.body.vendasA,
+                vendasB: req.body.vendasB,
+                vendasTotais: req.body.vendasB + req.body.vendasA,
+                cargo: req.body.cargo,
+                senha: hashedPassword
+
+            }
+        })
+    } else {
+        await prisma.user.update({
+            where: {
+                id: req.params.id
+            },
+            data: {
+                name: req.body.name,
+                email: req.body.email,
+                imgUser: req.body.imgUser,
+                group: req.body.group,
+                vendasA: req.body.vendasA,
+                vendasB: req.body.vendasB,
+                vendasTotais: req.body.vendasB + req.body.vendasA,
+                cargo: req.body.cargo
+
+            }
+        })
+    }
     res.status(201).json(req.body)
 };
 
